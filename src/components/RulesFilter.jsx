@@ -18,8 +18,6 @@ export default function RulesFilter({ onFiltersChange }) {
   return (
     <div className="w-full mx-auto p-4 bg-white rounded-xl shadow-sm border border-slate-200 h-full overflow-y-auto">
 
-      
-      {/* Date Range Filter */}
       <div className="mb-3 p-2 rounded-lg">
         <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
           <Calendar className="w-4 h-4 text-gray-600" />
@@ -62,8 +60,6 @@ export default function RulesFilter({ onFiltersChange }) {
           />
         </div>
       </div>
-
-      {/* Priority Filter */}
       <div className="mb-3 p-2 rounded-lg">
         <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
           <AlertTriangle className="w-4 h-4 text-gray-600" />

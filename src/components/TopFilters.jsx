@@ -22,13 +22,6 @@ export default function TopFilters({ onFiltersChange }) {
       return { rule_id: ruleId, ...rule };
     }).filter(Boolean);
 
-    console.log("TopFilters: Updating filters", {
-      date,
-      priority,
-      search,
-      selectedRules: mappedRules
-    });
-
     onFiltersChange({
       date,
       priority,
@@ -40,7 +33,7 @@ export default function TopFilters({ onFiltersChange }) {
   useEffect(() => {
     const fetchRules = async () => {
       try {
-        const response = await fetch('/src/data/example_rules.json')
+        const response = await fetch('/data/example_rules.json')
         const data = await response.json()
         
         const processedRules = data.map(rule => ({
@@ -83,7 +76,7 @@ export default function TopFilters({ onFiltersChange }) {
   return (
     <div className="bg-gradient-to-r from-white to-gray-50 shadow-lg rounded-xl border border-gray-200 px-6 py-5 mb-4">
       <div className="flex items-center space-x-4">
-        {/* Rules Multiselect */}
+  
         <div className="flex flex-col min-w-[300px]">
           <label className="text-sm font-semibold text-gray-800 mb-1">Active Rules</label>
           <div className="relative" ref={dropdownRef}>
