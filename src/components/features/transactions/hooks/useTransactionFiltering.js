@@ -10,19 +10,33 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
       } catch {
         evaluated = [];
       }
+
       const triggered = evaluated.filter((r) => r && r.triggered);
+
       let risk = "low";
       try {
         risk = fns.assessRisk(t.raw) || "low";
       } catch {
         risk = "low";
       }
+
+      // 🟢 Precompute dayStamp (midnight timestamp for date-only comparison)
+      let dayStamp = null;
+      if (t.timestamp) {
+        const d = new Date(t.timestamp);
+        if (!isNaN(d.getTime())) {
+          d.setHours(0, 0, 0, 0); // normalize to start of day
+          dayStamp = d.getTime();
+        }
+      }
+
       return {
         ...t,
         risk,
         evaluatedRules: evaluated,
         triggeredRulesCount: triggered.length,
         hasTriggeredRules: triggered.length > 0,
+        dayStamp, // fast date-only value
       };
     });
   }, [base, fns]);
@@ -30,6 +44,7 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
   const filtered = useMemo(() => {
     let arr = enriched;
 
+    // 🟢 Rule filter
     if (filters?.selectedRules?.length) {
       const triggered = arr.filter((t) => t.hasTriggeredRules);
       const nonTriggered = arr.filter((t) => !t.hasTriggeredRules);
@@ -38,12 +53,13 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
         if (a.triggeredRulesCount !== b.triggeredRulesCount)
           return b.triggeredRulesCount - a.triggeredRulesCount;
         return (riskOrder[b.risk] || 0) - (riskOrder[a.risk] || 0);
-        };
+      };
       triggered.sort(sortFn);
       nonTriggered.sort(sortFn);
       arr = showOnlyMatching ? triggered : [...triggered, ...nonTriggered];
     }
 
+    // 🟢 Search filter
     if (filters?.search?.trim()) {
       const terms = filters.search.toLowerCase().trim().split(/\s+/);
       arr = arr.filter((t) => {
@@ -62,42 +78,38 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
         return terms.every((term) => blob.includes(term));
       });
     }
-if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
-  arr = arr.filter((t) => {
-    if (!t.timestamp) return false;
-    
-    const txDate = new Date(t.timestamp);
-    if (isNaN(txDate.getTime())) return false;
-    
-    const txDateStr = txDate.toISOString().split('T')[0];
-    
-    if (filters.selectedDateRange.start && txDateStr < filters.selectedDateRange.start) {
-      return false;
-    }
-    if (filters.selectedDateRange.end && txDateStr > filters.selectedDateRange.end) {
-      return false;
-    }
-    
-    return true;
-  });
-  
-  // If no results after date filtering, return empty array
-  if (arr.length === 0) {
-    return [];
-  }
-}
 
+    // 🟢 Date range filter (using precomputed dayStamp)
+    if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
+      const start = filters.selectedDateRange.start
+        ? new Date(filters.selectedDateRange.start).setHours(0, 0, 0, 0)
+        : null;
 
+      const end = filters.selectedDateRange.end
+        ? new Date(filters.selectedDateRange.end).setHours(0, 0, 0, 0)
+        : null;
+
+      arr = arr.filter((t) => {
+        if (t.dayStamp == null) return false;
+        if (start !== null && t.dayStamp < start) return false;
+        if (end !== null && t.dayStamp > end) return false;
+        return true;
+      });
+    }
+
+    // 🟢 Priority filter
     if (filters?.priority) {
       arr = arr.filter((t) => t.risk === filters.priority);
     }
 
+    // 🟢 Price range filter
     if (filters?.priceRange) {
       const { min, max } = filters.priceRange;
       if (min !== "") arr = arr.filter((t) => t.amount >= parseFloat(min));
       if (max !== "") arr = arr.filter((t) => t.amount <= parseFloat(max));
     }
 
+    // 🟢 Currency filter
     if (filters?.selectedCurrency?.length) {
       const set = new Set(filters.selectedCurrency);
       arr = arr.filter((t) => set.has(t.currency));
