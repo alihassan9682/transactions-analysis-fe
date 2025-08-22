@@ -19,25 +19,44 @@ export default function RulesFilter({ onFiltersChange }) {
   return (
     <div className="w-full mx-auto p-4 bg-white rounded-xl shadow-sm border border-slate-200 h-full overflow-y-auto">
 
-      <div className="mb-3 p-2 rounded-lg">
-        <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-gray-600" />
-          <span>Date Range</span>
-        </h3>
-        <div className="flex space-x-2">
-          <input
-            type="date"
-            onChange={(e) => setSelectedDateRange({ ...selectedDateRange, start: e.target.value })}
-            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
-          />
-          <span className="text-xs text-gray-600 self-center">to</span>
-          <input
-            type="date"
-            onChange={(e) => setSelectedDateRange({ ...selectedDateRange, end: e.target.value })}
-            className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
-          />
-        </div>
-      </div>
+    <div className="mb-3 p-2 rounded-lg">
+  <h3 className="text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+    <Calendar className="w-4 h-4 text-gray-600" />
+    <span>Date Range</span>
+  </h3>
+  <div className="flex space-x-2">
+    <input
+      type="date"
+      value={selectedDateRange.start || ""}
+      onChange={(e) => {
+        const newStart = e.target.value;
+        if (selectedDateRange.end && newStart > selectedDateRange.end) {
+          // ❌ prevent invalid range
+          alert("Start date cannot be after End date");
+          return;
+        }
+        setSelectedDateRange({ ...selectedDateRange, start: newStart });
+      }}
+      className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+    />
+    <span className="text-xs text-gray-600 self-center">to</span>
+    <input
+      type="date"
+      value={selectedDateRange.end || ""}
+      onChange={(e) => {
+        const newEnd = e.target.value;
+        if (selectedDateRange.start && newEnd < selectedDateRange.start) {
+          // ❌ prevent invalid range
+          alert("End date cannot be before Start date");
+          return;
+        }
+        setSelectedDateRange({ ...selectedDateRange, end: newEnd });
+      }}
+      className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
+    />
+  </div>
+</div>
+
 
       {/* Price Range Filter */}
       <div className="mb-3 p-2 rounded-lg">

@@ -62,26 +62,29 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
         return terms.every((term) => blob.includes(term));
       });
     }
-
-   if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
-  const start = filters.selectedDateRange.start
-    ? new Date(filters.selectedDateRange.start)
-    : null;
-    // console.log("start",start)
-  const end = filters.selectedDateRange.end
-    ? new Date(filters.selectedDateRange.end)
-    : null;
-        // console.log("end",end)
-
-
+if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
   arr = arr.filter((t) => {
     if (!t.timestamp) return false;
+    
     const txDate = new Date(t.timestamp);
-    console.log("txDate",txDate)
-    if (start && txDate < start) return false;
-    if (end && txDate > end) return false;
+    if (isNaN(txDate.getTime())) return false;
+    
+    const txDateStr = txDate.toISOString().split('T')[0];
+    
+    if (filters.selectedDateRange.start && txDateStr < filters.selectedDateRange.start) {
+      return false;
+    }
+    if (filters.selectedDateRange.end && txDateStr > filters.selectedDateRange.end) {
+      return false;
+    }
+    
     return true;
   });
+  
+  // If no results after date filtering, return empty array
+  if (arr.length === 0) {
+    return [];
+  }
 }
 
 

@@ -13,7 +13,7 @@ export default function TransactionTable({ filters }) {
   const [showOnlyMatching, setShowOnlyMatching] = useState(false);
   const { evaluateRules, assessRisk } = useTransactionRules(rules, filters?.selectedRules || []);
 
-  const filtered = useTransactionFiltering(base, filters || {}, { evaluateRules, assessRisk }, showOnlyMatching);
+  const filtered =  useTransactionFiltering(base, filters || {}, { evaluateRules, assessRisk }, showOnlyMatching);
   const { currentPage, totalPages, pageItems, pageSize, setPageSize, setCurrentPage } =
     usePagination(filtered, 20);
 
