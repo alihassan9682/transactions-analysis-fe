@@ -79,8 +79,7 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
       });
     }
 
-    // 🟢 Date range filter (using precomputed dayStamp)
-    if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
+    if (filters?.selectedDateRange?.start && filters?.selectedDateRange?.end) {
       const start = filters.selectedDateRange.start
         ? new Date(filters.selectedDateRange.start).setHours(0, 0, 0, 0)
         : null;
@@ -97,19 +96,16 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
       });
     }
 
-    // 🟢 Priority filter
     if (filters?.priority) {
       arr = arr.filter((t) => t.risk === filters.priority);
     }
 
-    // 🟢 Price range filter
     if (filters?.priceRange) {
       const { min, max } = filters.priceRange;
       if (min !== "") arr = arr.filter((t) => t.amount >= parseFloat(min));
       if (max !== "") arr = arr.filter((t) => t.amount <= parseFloat(max));
     }
 
-    // 🟢 Currency filter
     if (filters?.selectedCurrency?.length) {
       const set = new Set(filters.selectedCurrency);
       arr = arr.filter((t) => set.has(t.currency));
