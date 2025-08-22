@@ -18,8 +18,8 @@ export default function TransactionTable({ filters }) {
         const fetchTransactions = async () => {
             try {
                 const [transactionsResponse, rulesResponse] = await Promise.all([
-                    fetch(`/src/data/transactions.json`),
-                    fetch(`/src/data/example_rules.json`)
+                    fetch(`/data/transactions.json`),
+                    fetch(`/data/example_rules.json`)
                 ])
                 
                 const transactionsText = await transactionsResponse.text()
