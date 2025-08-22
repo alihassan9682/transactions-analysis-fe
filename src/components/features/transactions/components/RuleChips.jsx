@@ -1,50 +1,34 @@
-export default function Pagination({
-  currentPage,
-  totalPages,
-  onFirst,
-  onPrev,
-  onJump,
-  onNext,
-  onLast,
-}) {
-  const pages = (() => {
-    const out = [];
-    const start = Math.max(1, currentPage - 2);
-    const end = Math.min(totalPages, start + 4);
-    const adjStart = Math.max(1, end - 4);
-    if (adjStart > 1) {
-      out.push(1);
-      if (adjStart > 2) out.push("...");
-    }
-    for (let i = adjStart; i <= end; i++) out.push(i);
-    if (end < totalPages) {
-      if (end < totalPages - 1) out.push("...");
-      out.push(totalPages);
-    }
-    return out;
-  })();
+export default function RuleChips({ rules }) {
+  if (!rules || rules.length === 0) return null; // safeguard
+
+  const displayed = rules.slice(0, 2);
+  const extraCount = rules.length - displayed.length;
 
   return (
-    <div className="px-4 sm:px-6 py-1 border-t border-slate-200 flex justify-center items-center gap-2 bg-white sticky bottom-0">
-      <button onClick={onFirst} disabled={currentPage === 1} className="px-2 py-1 border border-slate-200 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer">First</button>
-      <button onClick={onPrev} disabled={currentPage === 1} className="px-2 py-1 border border-slate-200 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer">Previous</button>
-      <div className="flex items-center gap-1">
-        {pages.map((p, i) =>
-          p === "..." ? (
-            <span key={`ellipsis-${i}`} className="px-2">...</span>
-          ) : (
-            <button
-              key={p}
-              onClick={() => onJump(p)}
-              className={`px-3 py-1 rounded-md text-sm cursor-pointer ${currentPage === p ? "bg-indigo-600 text-white" : "hover:bg-slate-50"}`}
-            >
-              {p}
-            </button>
-          )
-        )}
-      </div>
-      <button onClick={onNext} disabled={currentPage === totalPages} className="px-2 py-1 border border-slate-200 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer">Next</button>
-      <button onClick={onLast} disabled={currentPage === totalPages} className="px-2 py-1 border border-slate-200 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-slate-50 cursor-pointer">Last</button>
+    <div className="flex gap-2 flex-wrap">
+      {displayed.map((rule) => (
+        <span
+          key={rule.rule_id}
+          className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
+            ${
+              rule.triggered
+                ? rule.severity?.toLowerCase() === "high" || rule.severity?.toLowerCase() === "critical"
+                  ? "bg-red-100 text-red-700"
+                  : rule.severity?.toLowerCase() === "medium"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-600"
+            }`}
+        >
+          {rule.rule_id}
+        </span>
+      ))}
+
+      {extraCount > 0 && (
+        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+          +{extraCount} more
+        </span>
+      )}
     </div>
   );
 }

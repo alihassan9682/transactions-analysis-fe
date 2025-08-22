@@ -2,9 +2,7 @@ import { useState ,useEffect, useRef} from "react";
 import { Search, Calendar, DollarSign, AlertCircle } from "lucide-react";
 
 export default function TopFilters({ onFiltersChange }) {
-  const [date] = useState("");
-  const [priority] = useState("");
-  const [selectedRules, setSelectedRules] = useState([]);
+ const [selectedRules, setSelectedRules] = useState([]);
   const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedRule, setExpandedRule] = useState(null);
@@ -23,12 +21,10 @@ export default function TopFilters({ onFiltersChange }) {
     }).filter(Boolean);
 
     onFiltersChange({
-      date,
-      priority,
       search,
       selectedRules: mappedRules
     });
-  }, [date, priority, search, selectedRules, rules, onFiltersChange]);
+  }, [search, selectedRules, rules, onFiltersChange]);
 
   useEffect(() => {
     const fetchRules = async () => {
@@ -74,7 +70,7 @@ export default function TopFilters({ onFiltersChange }) {
     setExpandedRule(expandedRule === ruleId ? null : ruleId);
   };
   return (
-    <div className="bg-gradient-to-r from-white to-gray-50 shadow-lg rounded-xl border border-gray-200 px-6 py-5 mb-4">
+    <div className="bg-gradient-to-r from-white to-gray-50 shadow-lg rounded-xl border border-gray-200 px-6 py-5 mb-4 w-full">
       <div className="flex items-center space-x-4">
   
         <div className="flex flex-col min-w-[300px]">

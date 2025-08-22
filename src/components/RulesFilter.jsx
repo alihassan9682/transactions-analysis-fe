@@ -4,12 +4,13 @@ import { Calendar,CircleDollarSign , AlertTriangle, Coins } from "lucide-react";
 export default function RulesFilter({ onFiltersChange }) {
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
   const [selectedSeverity, setSelectedSeverity] = useState([]);
+  const [selectedDateRange, setSelectedDateRange] = useState({ start: "", end: "" });
   const [selectedCurrency, setSelectedCurrency] = useState([]);
   const Currencies = ['PAB', 'GTQ', 'CRC', 'BRL', 'USD', 'MXN', 'COP'];
 
   useEffect(() => {
-    onFiltersChange?.({ priceRange, selectedSeverity, selectedCurrency })
-  }, [priceRange, selectedSeverity, selectedCurrency, onFiltersChange])
+    onFiltersChange?.({ priceRange, selectedSeverity, selectedCurrency,selectedDateRange })
+  }, [priceRange, selectedSeverity, selectedCurrency, onFiltersChange,selectedDateRange])
 
 
 
@@ -26,11 +27,13 @@ export default function RulesFilter({ onFiltersChange }) {
         <div className="flex space-x-2">
           <input
             type="date"
+            onChange={(e) => setSelectedDateRange({ ...selectedDateRange, start: e.target.value })}
             className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
           />
           <span className="text-xs text-gray-600 self-center">to</span>
           <input
             type="date"
+            onChange={(e) => setSelectedDateRange({ ...selectedDateRange, end: e.target.value })}
             className="border border-gray-300 rounded px-2 py-1 text-xs focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-full"
           />
         </div>

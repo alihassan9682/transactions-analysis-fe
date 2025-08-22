@@ -63,9 +63,27 @@ export function useTransactionFiltering(base, filters, fns, showOnlyMatching) {
       });
     }
 
-    if (filters?.date) {
-      arr = arr.filter((t) => t.timestamp?.startsWith(filters.date));
-    }
+   if (filters?.selectedDateRange?.start || filters?.selectedDateRange?.end) {
+  const start = filters.selectedDateRange.start
+    ? new Date(filters.selectedDateRange.start)
+    : null;
+    // console.log("start",start)
+  const end = filters.selectedDateRange.end
+    ? new Date(filters.selectedDateRange.end)
+    : null;
+        // console.log("end",end)
+
+
+  arr = arr.filter((t) => {
+    if (!t.timestamp) return false;
+    const txDate = new Date(t.timestamp);
+    console.log("txDate",txDate)
+    if (start && txDate < start) return false;
+    if (end && txDate > end) return false;
+    return true;
+  });
+}
+
 
     if (filters?.priority) {
       arr = arr.filter((t) => t.risk === filters.priority);

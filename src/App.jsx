@@ -14,14 +14,14 @@ function App() {
     ...sidebarFilters,
     selectedRules: filters.selectedRules || [],
     search: filters.search || "",
-    date: filters.date || "",
+    date: sidebarFilters.selectedDateRange || "",
     priority: sidebarFilters.selectedSeverity?.[0] || ""
   }
 
   return (
     <div className="px-16">
       <Navbar/>
-      <div className="px-14 mt-6">
+      <div className="px-14 mt-6 w-full">
          <TopFilters onFiltersChange={setFilters} />
       </div>
      

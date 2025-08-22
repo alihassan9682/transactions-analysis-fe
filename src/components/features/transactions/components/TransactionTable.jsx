@@ -197,6 +197,8 @@ export default function TransactionTable({ filters }) {
               merchant_avg_transaction_amount: selected.raw?.merchant_avg_transaction_amount,
             },
           }}
+                    selectedRules ={filters?.selectedRules?.length ? selected.evaluatedRules : []}
+
           onClose={() => setSelected(null)}
         />
       )}
