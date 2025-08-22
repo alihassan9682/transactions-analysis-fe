@@ -21,8 +21,11 @@ function App() {
   return (
     <div className="px-16">
       <Navbar/>
-      <TopFilters onFiltersChange={setFilters} />
-      <div className="flex py-6 gap-8">
+      <div className="px-14 mt-6">
+         <TopFilters onFiltersChange={setFilters} />
+      </div>
+     
+      <div className="flex py-6 gap-8 px-14">
         <div className="flex-shrink-0 w-80 h-screen">
             <RulesFilter onFiltersChange={setSidebarFilters} />
         </div>

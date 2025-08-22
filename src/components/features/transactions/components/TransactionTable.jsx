@@ -18,7 +18,6 @@ export default function TransactionTable({ filters }) {
     usePagination(filtered, 20);
 
   const shownCount = filtered.length;
-  const headerNote = loading ? "Loading transactions..." : `Showing ${shownCount} transactions`;
   const [selected, setSelected] = useState(null);
 
   const pageSummary = useMemo(() => {
@@ -31,8 +30,8 @@ export default function TransactionTable({ filters }) {
     <>
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full w-full">
         <div className="px-4 sm:px-6 lg:px-8 py-1 border-b border-slate-200">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Transaction Analysis</h2>
+          <div className="flex justify-between items-center border-b border-slate-300 py-2">
+            <h2 className="text-lg sm:text-xl font-semibold text-slate-600 mt-2 ">Transaction Analysis</h2>
             {filters?.selectedRules?.length ? (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-slate-600">Show only matching transactions</label>
@@ -50,14 +49,14 @@ export default function TransactionTable({ filters }) {
               </div>
             ) : null}
           </div>
-          <div className="flex items-center justify-between">
-            <p className="text-slate-600 text-sm">{headerNote}</p>
+          <div className="flex items-center justify-between py-3 mt-2">
+             <p className="text-slate-500 text-xs mt-1">{pageSummary}</p>
             <div className="flex items-center gap-2">
               <label className="text-sm text-slate-600">Show entries:</label>
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="border border-slate-200 rounded-md text-sm p-2 pr-8 cursor-pointer bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
+                className="border border-slate-200 rounded-md text-xs px-2 py-2  cursor-pointer bg-white hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors appearance-none"
               >
                 <option value={20}>20 entries</option>
                 <option value={30}>30 entries</option>
@@ -67,7 +66,6 @@ export default function TransactionTable({ filters }) {
               </select>
             </div>
           </div>
-          <p className="text-slate-500 text-xs mt-1">{pageSummary}</p>
         </div>
 
         <div className="flex flex-col">

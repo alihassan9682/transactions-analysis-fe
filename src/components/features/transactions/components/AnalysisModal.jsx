@@ -2,7 +2,7 @@ import { formatWhen, riskPillClasses } from "../utils/format";
 
 export default function AnalysisModal({ tx, onClose }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 backdrop-blur-xs flex items-center justify-center z-50 p-4">
       <div className="rounded-xl shadow-2xl bg-white max-w-4xl max-h-[90vh] overflow-y-auto w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="px-4 sm:px-6 py-4 border-b border-gray-200 flex justify-between items-center">
           <h3 className="text-lg font-semibold text-gray-900">Transaction Analysis</h3>
