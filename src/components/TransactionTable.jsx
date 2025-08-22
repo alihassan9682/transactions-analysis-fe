@@ -10,16 +10,16 @@ export default function TransactionTable({ filters }) {
     const [rules, setRules] = useState([])
     const [currentPage, setCurrentPage] = useState(1)
     const [pageSize, setPageSize] = useState(20)
-    const [totalPages, setTotalPages] = useState(0)
+   
 
     const { evaluateRules, assessRisk } = useTransactionRules(rules, filters.selectedRules)
-
+    const rulesBaseUrl = import.meta.env.VITE_RULES_BASEURL;
     useEffect(() => {
         const fetchTransactions = async () => {
             try {
                 const [transactionsResponse, rulesResponse] = await Promise.all([
-                    fetch('/src/data/transactions.json'),
-                    fetch('/src/data/example_rules.json')
+                    fetch(`${rulesBaseUrl}/src/data/transactions.json`),
+                    fetch(`${rulesBaseUrl}/src/data/example_rules.json`)
                 ])
                 
                 const transactionsText = await transactionsResponse.text()
