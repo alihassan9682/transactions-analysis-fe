@@ -7,6 +7,8 @@ import Pagination from "./Pagination";
 import RuleChips from "./RuleChips";
 import AnalysisModal from "./AnalysisModal";
 import { useTransactionRules } from "../../../useTransactionRules";
+import LineGraph from "./LineGraph";
+import PieGraph from "./PieGraph";
 
 export default function TransactionTable({ filters }) {
   const { transactions: base, rules, loading } = useTransactions();
@@ -14,9 +16,9 @@ export default function TransactionTable({ filters }) {
   const { evaluateRules, assessRisk } = useTransactionRules(rules, filters?.selectedRules || []);
 
   const filtered =  useTransactionFiltering(base, filters || {}, { evaluateRules, assessRisk }, showOnlyMatching);
-  const { currentPage, totalPages, pageItems, pageSize, setPageSize, setCurrentPage } =
-    usePagination(filtered, 20);
 
+  const { currentPage, totalPages, pageItems, pageSize, setPageSize, setCurrentPage } =usePagination(filtered, 20);
+  const [toggleTable,setToggleTable] = useState(true)
   const shownCount = filtered.length;
   const [selected, setSelected] = useState(null);
 
@@ -26,12 +28,20 @@ export default function TransactionTable({ filters }) {
     return `Showing ${start} to ${end} of ${shownCount} entries`;
   }, [currentPage, pageSize, shownCount]);
 
+  
+
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden h-full w-full">
         <div className="px-4 sm:px-6 lg:px-8 py-1 border-b border-slate-200">
           <div className="flex justify-between items-center border-b border-slate-300 py-2">
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-600 mt-2 ">Transaction Analysis</h2>
+            <div className="flex justify-between w-full">
+              <h2 className="text-lg sm:text-xl font-semibold text-slate-600 mt-2 ">Transaction Analysis</h2>
+              <button
+              className="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 bg-indigo-600 text-white text-xs sm:text-sm font-medium rounded-lg hover:bg-indigo-700 transition-all duration-200 cursor-pointer"
+              onClick={()=>setToggleTable(!toggleTable)}
+              >{toggleTable?"Graphs":"Table"}</button>
+            </div>
             {filters?.selectedRules?.length ? (
               <div className="flex items-center gap-2">
                 <label className="text-sm text-slate-600">Show only matching transactions</label>
@@ -80,7 +90,24 @@ export default function TransactionTable({ filters }) {
               </div>
             ) : (
               <>
-                <div className="hidden sm:block">
+                {!toggleTable && (
+                  <div className="flex flex-wrap gap-8">
+                    <div className="w-full md:w-[30%] lg:w-[48%]">
+                      <LineGraph pageItems = {filtered}/>
+                    </div>
+                     <div className="w-full md:w-[30%] lg:w-[48%]">
+                      <PieGraph data={filtered} />
+                    </div>
+                   {/* <div className="w-full md:w-[30%] lg:w-[48%]">
+                      <LineGraph />
+                    </div>
+                    <div className="w-full md:w-[30%] lg:w-[48%]">
+                      <LineGraph />
+                    </div> */}
+                  </div>
+                )}
+                
+                {toggleTable && <div className="hidden sm:block">
                   <table className="w-full min-w-full">
                     <thead className="bg-slate-50 sticky top-0">
                       <tr>
@@ -134,7 +161,7 @@ export default function TransactionTable({ filters }) {
                       ))}
                     </tbody>
                   </table>
-                </div>
+                </div>}
 
                 {/* Mobile card list (no per-card pagination) */}
                 <div className="sm:hidden space-y-4 p-4">
