@@ -42,22 +42,6 @@ export default function TransactionTable({ filters }) {
               onClick={()=>setToggleTable(!toggleTable)}
               >{toggleTable?"Graphs":"Table"}</button>
             </div>
-            {filters?.selectedRules?.length ? (
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-slate-600">Show only matching transactions</label>
-                <button
-                  onClick={() => setShowOnlyMatching((v) => !v)}
-                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 cursor-pointer ${
-                    showOnlyMatching ? "bg-indigo-600" : "bg-gray-200"
-                  }`}
-                >
-                  <span className="sr-only">Toggle filter mode</span>
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    showOnlyMatching ? "translate-x-6" : "translate-x-1"
-                  }`} />
-                </button>
-              </div>
-            ) : null}
           </div>
           <div className="flex items-center justify-between py-3 mt-2">
              <p className="text-slate-500 text-xs mt-1">{pageSummary}</p>
